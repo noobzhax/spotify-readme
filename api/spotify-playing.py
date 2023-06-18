@@ -32,7 +32,7 @@ def refreshToken():
         "refresh_token": SPOTIFY_REFRESH_TOKEN,
     }
 
-    headers = {"Authorization": "Basic {}".format(getAuth())}
+    headers = {"Authorization": f"Basic {getAuth()}"}
 
     response = requests.post(SPOTIFY_URL_REFRESH_TOKEN, data=data, headers=headers)
     return response.json()["access_token"]
@@ -42,10 +42,7 @@ def recentlyPlayed():
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(SPOTIFY_URL_RECENTLY_PLAY, headers=headers)
 
-    if response.status_code == 204:
-        return {}
-
-    return response.json()
+    return {} if response.status_code == 204 else response.json()
 
 def nowPlaying():
 
@@ -55,10 +52,7 @@ def nowPlaying():
 
     response = requests.get(SPOTIFY_URL_NOW_PLAYING, headers=headers)
 
-    if response.status_code == 204:
-        return {}
-
-    return response.json()
+    return {} if response.status_code == 204 else response.json()
 
 def barGen(barCount):
     barCSS = ""
@@ -78,7 +72,7 @@ def loadImageB64(url):
 
 def makeSVG(data):
     barCount = 85
-    contentBar = "".join(["<div class='bar'></div>" for i in range(barCount)])
+    contentBar = "".join(["<div class='bar'></div>" for _ in range(barCount)])
     barCSS = barGen(barCount)
 
     if data == {}:
